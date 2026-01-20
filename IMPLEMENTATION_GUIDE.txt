@@ -1,0 +1,452 @@
+
+╔════════════════════════════════════════════════════════════════════════════════╗
+║              DIVESTMENT SOW AUDITOR - IMPLEMENTATION GUIDE                     ║
+║                    Version 2.0 - Shell IT Contracts                            ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+
+📋 QUICK IMPLEMENTATION CHECKLIST
+
+□ Step 1: Download all files
+□ Step 2: Create project structure
+□ Step 3: Rename module files
+□ Step 4: Install Python dependencies
+□ Step 5: Configure .env file
+□ Step 6: Test installation
+□ Step 7: Run first audit
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📥 STEP 1: DOWNLOAD FILES (11 files total)
+
+Download these files from the conversation:
+✓ config.py                          [code_file:21]
+✓ app.py                             [code_file:43]
+✓ modules__init__.py                 [code_file:99]
+✓ modules_llm_analyzer.py            [code_file:100]
+✓ modules_pillar_checker.py          [code_file:101]
+✓ modules_document_parser.py         [code_file:102]
+✓ modules_report_generator.py        [code_file:103]
+✓ modules_email_notification.py      [code_file:106]
+✓ requirements.txt                   [code_file:34]
+✓ .env.template                      [code_file:104]
+✓ README.md                          [code_file:105]
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📁 STEP 2: CREATE PROJECT STRUCTURE
+
+Open terminal/command prompt and run:
+
+Windows:
+--------
+mkdir C:\SOW_Auditor_Divestment
+cd C:\SOW_Auditor_Divestment
+mkdir modules
+mkdir reports
+mkdir reports\pdf
+mkdir reports\json
+
+Mac/Linux:
+----------
+mkdir -p ~/SOW_Auditor_Divestment
+cd ~/SOW_Auditor_Divestment
+mkdir -p modules
+mkdir -p reports/pdf
+mkdir -p reports/json
+
+Your structure should look like:
+SOW_Auditor_Divestment/
+├── config.py                    ← Place here
+├── app.py                       ← Place here
+├── requirements.txt             ← Place here
+├── .env                         ← Create from .env.template
+├── README.md                    ← Place here
+├── modules/
+│   ├── __init__.py              ← Rename from modules__init__.py
+│   ├── document_parser.py       ← Rename from modules_document_parser.py
+│   ├── llm_analyzer.py          ← Rename from modules_llm_analyzer.py
+│   ├── pillar_checker.py        ← Rename from modules_pillar_checker.py
+│   ├── report_generator.py      ← Rename from modules_report_generator.py
+│   └── email_notification.py    ← Rename from modules_email_notification.py
+└── reports/
+    ├── pdf/                     ← Auto-generated reports
+    └── json/                    ← Auto-generated JSON
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✏️ STEP 3: RENAME MODULE FILES
+
+The downloaded module files have prefixes. Remove them:
+
+modules__init__.py              → modules/__init__.py
+modules_document_parser.py      → modules/document_parser.py
+modules_llm_analyzer.py         → modules/llm_analyzer.py
+modules_pillar_checker.py       → modules/pillar_checker.py
+modules_report_generator.py     → modules/report_generator.py
+modules_email_notification.py   → modules/email_notification.py
+
+Windows Command:
+----------------
+move modules__init__.py modules\__init__.py
+move modules_document_parser.py modules\document_parser.py
+move modules_llm_analyzer.py modules\llm_analyzer.py
+move modules_pillar_checker.py modules\pillar_checker.py
+move modules_report_generator.py modules\report_generator.py
+move modules_email_notification.py modules\email_notification.py
+
+Mac/Linux Command:
+------------------
+mv modules__init__.py modules/__init__.py
+mv modules_document_parser.py modules/document_parser.py
+mv modules_llm_analyzer.py modules/llm_analyzer.py
+mv modules_pillar_checker.py modules/pillar_checker.py
+mv modules_report_generator.py modules/report_generator.py
+mv modules_email_notification.py modules/email_notification.py
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔧 STEP 4: INSTALL DEPENDENCIES
+
+4.1 Install Python Requirements:
+---------------------------------
+pip install -r requirements.txt
+
+Or install individually:
+pip install customtkinter==5.2.2
+pip install python-dotenv==1.0.0
+pip install PyPDF2==3.0.1
+pip install pdfplumber==0.10.3
+pip install pdf2image==1.16.3
+pip install python-docx==1.1.0
+pip install pytesseract==0.3.10
+pip install Pillow==10.2.0
+pip install requests==2.31.0
+pip install reportlab==4.0.9
+
+4.2 Install Tesseract OCR (for scanned PDFs):
+----------------------------------------------
+Windows: 
+  1. Download: https://github.com/UB-Mannheim/tesseract/wiki
+  2. Install to: C:\Program Files\Tesseract-OCR\
+  3. Add to PATH or set in .env
+
+Mac:
+  brew install tesseract
+
+Linux:
+  sudo apt-get install tesseract-ocr
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔐 STEP 5: CONFIGURE .env FILE
+
+5.1 Copy template:
+------------------
+Windows: copy .env.template .env
+Mac/Linux: cp .env.template .env
+
+5.2 Edit .env file with your values:
+------------------------------------
+Open .env in text editor and fill in:
+
+# REQUIRED: Deepseek API Key
+DEEPSEEK_API_KEY=sk-your-actual-deepseek-api-key
+
+# REQUIRED: Email Configuration
+EMAIL_SENDER=your_email@gmail.com
+EMAIL_PASSWORD=your_gmail_app_password
+EMAIL_RECIPIENT=vendor_owner@company.com
+
+# OPTIONAL: Tesseract Path (Windows only, if not in PATH)
+# TESSERACT_PATH=C:\Program Files\Tesseract-OCR\tesseract.exe
+
+5.3 Get Deepseek API Key:
+-------------------------
+1. Visit: https://platform.deepseek.com/
+2. Sign up for account
+3. Go to API Keys section
+4. Create new API key
+5. Copy and paste into .env
+
+5.4 Setup Gmail App Password:
+------------------------------
+1. Go to: https://myaccount.google.com/security
+2. Enable 2-Factor Authentication
+3. Click "App passwords"
+4. Generate password for "Mail"
+5. Copy 16-character password to .env (no spaces)
+
+Important: Use App Password, NOT your regular Gmail password!
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ STEP 6: TEST INSTALLATION
+
+6.1 Verify file structure:
+--------------------------
+python -c "import os; print('✓ app.py exists' if os.path.exists('app.py') else '✗ Missing app.py')"
+python -c "import os; print('✓ modules exists' if os.path.exists('modules') else '✗ Missing modules')"
+python -c "import os; print('✓ .env exists' if os.path.exists('.env') else '✗ Missing .env')"
+
+6.2 Test imports:
+-----------------
+python -c "from modules.llm_analyzer import LLMAnalyzer; print('✓ Modules import OK')"
+python -c "from config import Config; print('✓ Config import OK')"
+python -c "import customtkinter; print('✓ CustomTkinter installed')"
+
+6.3 Test .env loading:
+----------------------
+python -c "from dotenv import load_dotenv; import os; load_dotenv(); print('✓ API Key loaded' if os.getenv('DEEPSEEK_API_KEY') else '✗ Missing API key')"
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🚀 STEP 7: RUN YOUR FIRST AUDIT
+
+7.1 Launch application:
+-----------------------
+python app.py
+
+7.2 Upload SOW document:
+------------------------
+1. Click "📁 Browse SOW Document"
+2. Select a PDF or DOCX SOW file
+3. Click "🔍 Start Compliance Audit"
+
+7.3 Enter project timeline:
+---------------------------
+Dialog will appear asking for:
+- Project Name: e.g., "Shell Penguins UKCS Divestment"
+- Build Phase End: 2026-03-31
+- Test Phase End: 2026-05-15
+- Cutover Phase End: 2026-06-30
+
+7.4 Wait for analysis:
+----------------------
+Progress bar will show:
+- Parsing document (with OCR if needed)
+- Extracting tables
+- Analyzing with Deepseek AI (9 pillars)
+- Validating compliance
+- Calculating score
+- Generating report
+
+7.5 Review results:
+-------------------
+Results window will display:
+✓ Executive Summary
+✓ Go/No-Go Recommendation
+✓ Compliance Score (0-100%)
+✓ 9 Pillar Scorecard
+✓ Critical Risks
+✓ Actionable Redlines
+
+7.6 Export/Email:
+-----------------
+- Click "📄 Export PDF Report" → Saves to reports/pdf/
+- Click "📧 Email to Vendor Owner" → Sends to configured email
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎯 WHAT THE APP ANALYZES (9 MANDATORY PILLARS)
+
+1. ✅ Pricing Model
+   Checks for: Fixed Cost vs Time & Material
+   Critical: Flags T&M as high risk
+
+2. ✅ Responsibilities
+   Checks for: Clear Shell vs Vendor RACI
+   Critical: No ambiguous language
+
+3. ✅ Schedule
+   Checks for: Build/Test/Cutover dates
+   Critical: Must align with your entered timeline
+
+4. ✅ Licensing
+   Checks for: Temporary licenses with dates/costs
+   Critical: Missing licenses flag as risk
+
+5. ✅ Master Contract Reference
+   Checks for: MSA or contract number
+   Critical: Missing reference is high risk
+
+6. ✅ Sign-off Blocks
+   Checks for: Formal signature spaces
+   Critical: Both parties must have sign-off
+
+7. ✅ Change Management
+   Checks for: Clear change request process
+   Critical: Undefined process is risk
+
+8. ✅ Risk & Terms Mitigation
+   Checks for: Vendor-favoring clauses
+   Critical: Flags delays, liabilities, SLA issues
+
+9. ✅ Data Handling
+   Checks for: Data verification step
+   Critical: For extraction-only scopes
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🔍 TROUBLESHOOTING COMMON ISSUES
+
+Issue 1: "Module not found" error
+----------------------------------
+Solution:
+  - Check files are in correct locations
+  - Verify module files renamed correctly (removed prefixes)
+  - Run: pip install -r requirements.txt
+
+Issue 2: "DEEPSEEK_API_KEY not found"
+--------------------------------------
+Solution:
+  - Check .env file exists in root directory
+  - Verify .env has: DEEPSEEK_API_KEY=sk-...
+  - No quotes needed around the key
+  - No spaces in the line
+
+Issue 3: OCR not working on scanned PDFs
+-----------------------------------------
+Solution:
+  - Install Tesseract OCR
+  - Windows: Add to PATH or set TESSERACT_PATH in .env
+  - Test: Run "tesseract --version" in terminal
+
+Issue 4: Email sending fails
+-----------------------------
+Solution:
+  - Use Gmail App Password (not regular password)
+  - Enable 2FA on Gmail account first
+  - Check port 587 not blocked by firewall
+  - Verify EMAIL_SENDER and EMAIL_PASSWORD in .env
+
+Issue 5: "Invalid pillar: Timeline" error
+------------------------------------------
+Solution:
+  - Already fixed in provided files
+  - App uses "Schedule" not "Timeline"
+  - If error persists, re-download config.py
+
+Issue 6: PDF generation fails
+------------------------------
+Solution:
+  - Check reports/pdf/ directory exists
+  - Verify write permissions
+  - Run: pip install reportlab --upgrade
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📊 EXPECTED OUTPUT EXAMPLE
+
+Console Output:
+---------------
+📖 Parsing SOW document (OCR if needed)...
+📊 Extracting cost tables and schedules...
+🤖 Analyzing with Deepseek AI (9 Mandatory Pillars)...
+✅ Validating compliance against 9 pillars...
+📊 Calculating compliance score: 73.5%
+⚠️ Checking for critical risks... 2 CRITICAL issues found
+📝 Preparing audit report...
+✅ Audit complete!
+✅ PDF report generated: reports/pdf/SOW_Audit_Shell_Penguins_20260103_184520.pdf
+
+Results Display:
+----------------
+==================================================================================
+DIVESTMENT SOW AUDIT REPORT
+Project: Shell Penguins UKCS Divestment
+==================================================================================
+
+📋 EXECUTIVE SUMMARY:
+The SOW provides a reasonable framework but has critical gaps in pricing and 
+licensing sections. The schedule aligns with project timelines, but the pricing
+model includes Time & Material clauses that introduce cost risk.
+
+🔴 RECOMMENDATION: No-Go
+
+📊 COMPLIANCE SCORE: 73.5% (🟡 MEDIUM RISK)
+
+📅 DIVESTMENT TIMELINE:
+  • Build Phase End: 2026-03-31
+  • Test Phase End: 2026-05-15
+  • Cutover Phase End: 2026-06-30
+
+-------------------------------------------------------------------------------------
+
+✅ COMPLIANCE SCORECARD - 9 MANDATORY PILLARS:
+
+1. ❌ Pricing Model - Not Met (🔴 Critical)
+   Evidence: Document mentions "hourly rates for additional work"...
+   ⚡ Action: Remove all T&M clauses and convert to 100% fixed cost
+
+2. ✅ Responsibilities - Met (🟢 Low)
+   Evidence: Clear RACI matrix on page 5 defines Shell and Vendor roles...
+
+3. ✅ Schedule - Met (🟢 Low)
+   Evidence: Timeline section matches project dates for all phases...
+
+4. ❌ Licensing - Not Met (🔴 Critical)
+   Evidence: No mention of temporary licenses for test environment...
+   ⚡ Action: Add explicit licensing section with dates and costs
+
+[... 5 more pillars ...]
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🎉 SUCCESS INDICATORS
+
+You'll know it's working when you see:
+✓ App launches with Shell-themed blue interface
+✓ File selection works (PDF/DOCX)
+✓ Project timeline dialog appears
+✓ Progress bar shows AI analysis steps
+✓ Results display all 9 pillars
+✓ PDF saves to reports/pdf/ directory
+✓ Email sends with attachment
+
+═══════════════════════════════════════════════════════════════════════════════
+
+📞 FINAL CHECKLIST BEFORE FIRST USE
+
+□ All 11 files downloaded
+□ Project structure created
+□ Module files renamed (removed prefixes)
+□ Python dependencies installed
+□ Tesseract OCR installed
+□ .env file created and configured
+□ Deepseek API key added to .env
+□ Gmail app password added to .env
+□ Test imports successful
+□ reports/pdf/ and reports/json/ directories exist
+□ Ready to run: python app.py
+
+═══════════════════════════════════════════════════════════════════════════════
+
+🆘 NEED HELP?
+
+1. Check README.md for detailed docs
+2. Review troubleshooting section above
+3. Verify .env configuration
+4. Test each component separately
+5. Check console output for error messages
+
+═══════════════════════════════════════════════════════════════════════════════
+
+✨ CONGRATULATIONS!
+
+You now have a fully functional Divestment SOW Auditor!
+
+Key Features:
+✓ AI-powered analysis of 9 mandatory pillars
+✓ Fixed-cost compliance checking
+✓ Timeline validation against divestment deadlines
+✓ Professional PDF reports
+✓ Email notifications with highlights
+✓ OCR support for scanned documents
+✓ Table extraction for cost analysis
+✓ Critical risk escalation
+✓ Actionable redlines for contract protection
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Built with ❤️ for Shell IT Divestment Projects
+Version 2.0 • January 2026
