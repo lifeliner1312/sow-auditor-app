@@ -10,7 +10,6 @@ __pycache__/
 *.pyc
 *.pdf
 *.docx
-reports/
 temp/
 
 # IDEs
