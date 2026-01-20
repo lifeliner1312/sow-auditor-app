@@ -1,0 +1,22 @@
+# Environment variables (NEVER commit!)
+.env
+*.env
+.env.*
+.env.local
+.env.staging
+
+# Generated files
+__pycache__/
+*.pyc
+*.pdf
+*.docx
+reports/
+temp/
+
+# IDEs
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
